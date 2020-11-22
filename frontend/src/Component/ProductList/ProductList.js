@@ -2,6 +2,7 @@ import React,{ useState, useEffect} from "react";
 import "./product.scss";
 import {makeRequest} from '../../Service/requestCall';
 import EditProduct from '../EditProduct/EditProduct';
+import DeleteProduct from '../DeleteProduct/DeleteProduct';
 
 /**
  * Created by Piyush on Sat Nov 21 2020 13:11:02 GMT+0530 (India Standard Time)
@@ -23,7 +24,7 @@ function ProductItem({ item }) {
     if(isEditPopupOpen){
       return <EditProduct data={item} handleClose={toggleEditPopup} />
     } else if(isDeletePopupOpen){
-      return <EditProduct handleClose={toggleDeletePopup} />
+      return <DeleteProduct data={item} handleClose={toggleDeletePopup} />
     } else {
       return <React.Fragment/>
     }
