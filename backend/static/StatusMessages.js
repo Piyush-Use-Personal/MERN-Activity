@@ -13,7 +13,7 @@
       705 : 'Login failed. Please check your credentials!',
       706 : 'Your account is not registered yet!',
       707 : 'Your account is blocked!',
-      
+      708 : 'Account Already Exist!'
     }
 };
 

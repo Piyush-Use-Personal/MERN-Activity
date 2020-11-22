@@ -4,6 +4,7 @@ import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import { makeRequest } from "../../Service/requestCall";
+import { ToastsStore } from "react-toasts";
 import Chip from '@material-ui/core/Chip';
 /**
  * Created by Piyush on Sat Nov 21 2020 15:42:34 GMT+0530 (India Standard Time)
@@ -29,6 +30,7 @@ function AddCategory({ handleClose }) {
       }
       getData();
     } catch (error) {
+      ToastsStore.error(error.message)
 
     }
   }, []);
@@ -43,6 +45,7 @@ function AddCategory({ handleClose }) {
       }
       saveCategory();
     } catch (error) {
+      ToastsStore.error(error.message)
 
     }
   };
@@ -64,6 +67,7 @@ function AddCategory({ handleClose }) {
       }
       saveCategory();
     } catch (error) {
+      ToastsStore.error(error.message)
 
     }
   };
@@ -77,15 +81,19 @@ function AddCategory({ handleClose }) {
           <Typography component="h1" variant="h5">
             Add New Category
           </Typography>
-          {data.map((categoryItem) => {
-            return (
-              <Chip size={'small'} 
-              key={categoryItem.categoryId} 
-              className='width-content-fit' 
-              label={categoryItem.category} 
-              onDelete={() => handleDelete(categoryItem)} color="primary" />
-            );
-          })}
+         <div className='row margin-y-12'>
+         {data.map((categoryItem) => {
+          return (
+           <div className='margin-x-8'>
+           <Chip  
+           key={categoryItem.categoryId} 
+           className='width-content-fit' 
+           label={categoryItem.category} 
+           onDelete={() => handleDelete(categoryItem)} color="primary" />
+           </div>
+          );
+        })}
+         </div>
           <form noValidate>
             <TextField
               variant="outlined"

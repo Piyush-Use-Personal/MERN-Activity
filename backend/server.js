@@ -17,6 +17,7 @@ const envConfig = require('./config/env.config');
 global.mongoose = require('mongoose');
 global.async = require('async');
 global.ResponseWrapper = require('./utils/ResponseWrapper');
+global.EncryptionWrapper = require('./utils/EncryptionWrapper');
 
 // require static files
 

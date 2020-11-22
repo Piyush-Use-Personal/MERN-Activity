@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
+import { ToastsStore } from "react-toasts";
 import FormControl from "@material-ui/core/FormControl";
 import { makeRequest } from "../../Service/requestCall";
 import Select from "@material-ui/core/Select";
@@ -44,6 +45,7 @@ function CategoryDropdown({defaultValue, onChangeValue}) {
       }
       getData();
     } catch (error) {
+      ToastsStore.error(error.message)
 
     }
 

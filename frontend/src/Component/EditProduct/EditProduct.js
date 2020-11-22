@@ -6,6 +6,7 @@ import Button from "@material-ui/core/Button";
 import SizingDropdown from "../SizingDropdown/SizingDropdown";
 import {makeRequest} from '../../Service/requestCall';
 import CategoryDropdown from "../CategoryDropdown/CategoryDropdown";
+import { ToastsStore } from "react-toasts";
 /**
  * Created by Piyush on Sat Nov 21 2020 15:42:46 GMT+0530 (India Standard Time)
  * popup for product
@@ -21,7 +22,6 @@ function EditProduct({ data, handleClose }) {
   const handleChange = (event) => {
     let localProductItem = {...product, ...{[event.target.name] : event.target.value}}
     updateItemInProduct(localProductItem);
-    console.log('Product: ', product);
   };
   
   const saveProduct = (product) => {
@@ -32,11 +32,16 @@ function EditProduct({ data, handleClose }) {
           url: "/v1/addOrUpdateProduct",
           data : product
         });
-        console.log('RESPONSE DATA ', response.data);
+        if(response.data.code === 200){
+          ToastsStore.success("Product Edited Successfully!")
+        } else {
+          ToastsStore.warning(response.data.message)
+        }
+
       }
       saveProduct();
     } catch (error) {
-
+      ToastsStore.error(error.message)
     }
   };
 

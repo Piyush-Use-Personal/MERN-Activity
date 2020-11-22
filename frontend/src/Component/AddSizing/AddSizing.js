@@ -4,6 +4,7 @@ import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import { makeRequest } from "../../Service/requestCall";
+import { ToastsStore } from "react-toasts";
 import Chip from '@material-ui/core/Chip';
 /**
  * Created by Piyush on Sat Nov 21 2020 15:42:34 GMT+0530 (India Standard Time)
@@ -28,6 +29,7 @@ function AddSizing({ handleClose }) {
       }
       getData();
     } catch (error) {
+      ToastsStore.error(error.message)
 
     }
   }, []);
@@ -42,6 +44,7 @@ function AddSizing({ handleClose }) {
       }
       saveSizing();
     } catch (error) {
+      ToastsStore.error(error.message)
 
     }
   };
@@ -63,6 +66,7 @@ function AddSizing({ handleClose }) {
       }
       saveSizing();
     } catch (error) {
+      ToastsStore.error(error.message)
 
     }
   };
@@ -76,15 +80,20 @@ function AddSizing({ handleClose }) {
           <Typography component="h1" variant="h5">
             Add New Sizing
           </Typography>
+          <div className='row margin-y-12'>
           {data.map((sizeItem) => {
-            return (
-              <Chip size={'small'} 
-              key={sizeItem.sizeId} 
-              className='width-content-fit' 
-              label={sizeItem.size} 
-              onDelete={() => handleDelete(sizeItem)} color="primary" />
-            );
-          })}
+           return (
+            <div className='margin-x-8'>
+            <Chip  
+            key={sizeItem.sizeId} 
+            className='width-content-fit' 
+            label={sizeItem.size} 
+            onDelete={() => handleDelete(sizeItem)} color="primary" />
+            </div>
+           );
+         })}
+          </div>
+         
           <form noValidate>
             <TextField
               variant="outlined"
