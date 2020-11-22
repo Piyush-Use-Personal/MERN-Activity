@@ -1,9 +1,10 @@
-import React from "react";
+import React,{ useState } from "react";
 import "../../Shared/Styles/popup.scss";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import SizingDropdown from "../SizingDropdown/SizingDropdown";
+import {makeRequest} from '../../Service/requestCall';
 import CategoryDropdown from "../CategoryDropdown/CategoryDropdown";
 /**
  * Created by Piyush on Sat Nov 21 2020 15:42:46 GMT+0530 (India Standard Time)
@@ -13,12 +14,40 @@ import CategoryDropdown from "../CategoryDropdown/CategoryDropdown";
  */
 
 function EditProduct({ data, handleClose }) {
+
+  
+  const [product, updateItemInProduct] = useState(data);
+
+  const handleChange = (event) => {
+    let localProductItem = {...product, ...{[event.target.name] : event.target.value}}
+    updateItemInProduct(localProductItem);
+    console.log('Product: ', product);
+  };
+  
+  const saveProduct = (product) => {
+    try {
+      async function saveProduct(){
+        let response = await makeRequest({
+          method: "POST",
+          url: "/v1/addOrUpdateProduct",
+          data : product
+        });
+        console.log('RESPONSE DATA ', response.data);
+      }
+      saveProduct();
+    } catch (error) {
+
+    }
+  };
+
+
   return (
     <div className="popup-box">
       <div className="box">
         <span className="close-icon" onClick={handleClose}>
           x
         </span>
+
         <div className="column">
           <Typography component="h1" variant="h5">
             Edit Product Details
@@ -33,12 +62,13 @@ function EditProduct({ data, handleClose }) {
               label="Product Name"
               name="productName"
               autoComplete="Product Name"
-              value = {data.productName}
+              value = {product.productName}
               autoFocus
+              onChange={handleChange}
             />
             <div className='row '>
-            <SizingDropdown></SizingDropdown>
-            <CategoryDropdown></CategoryDropdown>
+            <SizingDropdown onChangeValue={handleChange} defaultValue = {product.sizeId}></SizingDropdown>
+            <CategoryDropdown onChangeValue={handleChange} defaultValue = {product.categoryId}></CategoryDropdown>
 
             </div>
             <TextField
@@ -50,8 +80,9 @@ function EditProduct({ data, handleClose }) {
               label="Price"
               name="price"
               autoComplete="Price"
-              value = {data.price}
+              value = {product.price}
               autoFocus
+              onChange={handleChange}
             />
             <TextField
               variant="outlined"
@@ -62,7 +93,8 @@ function EditProduct({ data, handleClose }) {
               label="Stock"
               name="stock"
               autoComplete="Stock"
-              value = {data.stock}
+              value = {product.stock}
+              onChange={handleChange}
               autoFocus
             />
             <TextField
@@ -74,7 +106,8 @@ function EditProduct({ data, handleClose }) {
               label="Description"
               name="description"
               autoComplete="Description"
-              value = {data.description}
+              value = {product.description}
+              onChange={handleChange}
               autoFocus
             />
             <Button
@@ -82,9 +115,9 @@ function EditProduct({ data, handleClose }) {
               fullWidth
               variant="contained"
               color="primary"
-              onClick={() => {}}
+              onClick={() => saveProduct(product)}
             >
-              Save
+              Update
             </Button>
           </form>
         </div>

@@ -116,7 +116,7 @@ function ProductCtrl() {
     try {
       async.waterfall([
         function getAllProducts(callback) {
-            Product.find({isDeleted : false}, function (err, result) {
+            Product.find({isDeleted : false},{_id: 0, __v : 0, isDeleted: 0}, function (err, result) {
                 if(err){
                     callback(err);
                 } else if(result.length === 0){

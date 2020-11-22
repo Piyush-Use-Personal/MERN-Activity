@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -21,32 +21,50 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(2),
   },
 }));
-function SizingDropdown() {
+function SizingDropdown({defaultValue, onChangeValue}) {
   const classes = useStyles();
-  const [size, setSize] = React.useState('');
+  const [data, setData] = React.useState([]);
+  const [size, setSize] = React.useState(defaultValue);
   const [isDataLoaded, toggleLoader] = React.useState(false);
   const handleChange = (event) => {
     setSize(event.target.value);
+    onChangeValue(event);
   };
-  makeRequest({
-    method : 'GET',
-    url: `https://jsonplaceholder.typicode.com/todos/1`,   
-  }).then(function (res) {
-    toggleLoader(true);
-  });
+  useEffect(() => {
+    try {
+      async function getData(){
+        let response = await makeRequest({
+          method: "GET",
+          url: "/v1/getAllSizes",
+        });
+        setData(response.data.result);
+        toggleLoader(true);
+      }
+      getData();
+    } catch (error) {
+
+    }
+
+  }, []);
+  
   function Design() {
     return (
       <FormControl className={classes.formControl}>
       <InputLabel id="demo-simple-select-label">Size</InputLabel>
       <Select
-        labelId="demo-simple-select-label"
-        id="demo-simple-select"
+      labelId="sizeId"
+      id="sizeId"
+      name = "sizeId"
         value={size}
         onChange={handleChange}
       >
-        <MenuItem value={10}>Ten</MenuItem>
-        <MenuItem value={20}>Twenty</MenuItem>
-        <MenuItem value={30}>Thirty</MenuItem>
+      {data.map((size) => {
+        return (
+          <MenuItem key={size.sizeId} value={size.sizeId} selected = {true}>
+            {size.size}
+          </MenuItem>
+        );
+      })}
       </Select>
     </FormControl>
     );

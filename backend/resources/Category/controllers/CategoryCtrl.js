@@ -81,7 +81,7 @@ function CategoryCtrl() {
     try {
       async.waterfall([
         function getAllCategories(callback) {
-            Category.find({isDeleted : false}, function (err, result) {
+            Category.find({isDeleted : false} ,{_id: 0, __v : 0, isDeleted: 0}, function (err, result) {
                 if(err){
                     callback(err);
                 } else if(result.length === 0){

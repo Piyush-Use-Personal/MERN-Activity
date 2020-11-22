@@ -1,11 +1,11 @@
 import axios from 'axios';
-
+const leading = 'http://localhost:8000';
 export function makeRequest({method, url, data} ) {
     return new Promise(function (resolve, reject) {
         try {
             axios({
                 method : method,
-                url: url, 
+                url: `${leading}${url}`, 
                 data: data  
               }).then(function (res) {
                   resolve(res);

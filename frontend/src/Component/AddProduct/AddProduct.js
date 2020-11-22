@@ -1,9 +1,10 @@
-import React from "react";
+import React,{ useState }  from "react";
 import "../../Shared/Styles/popup.scss";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import SizingDropdown from "../SizingDropdown/SizingDropdown";
+import {makeRequest} from '../../Service/requestCall';
 import CategoryDropdown from "../CategoryDropdown/CategoryDropdown";
 /**
  * Created by Piyush on Sat Nov 21 2020 15:42:46 GMT+0530 (India Standard Time)
@@ -13,6 +14,30 @@ import CategoryDropdown from "../CategoryDropdown/CategoryDropdown";
  */
 
 function AddProduct({ handleClose }) {
+
+  const [product, updateItemInProduct] = useState({});
+
+  const handleChange = (event) => {
+    let localProductItem = {...product, ...{[event.target.name] : event.target.value}}
+    updateItemInProduct(localProductItem);
+  };
+  
+  const saveProduct = (product) => {
+    try {
+      async function saveProduct(){
+        let response = await makeRequest({
+          method: "POST",
+          url: "/v1/addOrUpdateProduct",
+          data : product
+        });
+        console.log('RESPONSE DATA ', response.data);
+      }
+      saveProduct();
+    } catch (error) {
+
+    }
+  };
+
   return (
     <div className="popup-box">
       <div className="box">
@@ -34,10 +59,11 @@ function AddProduct({ handleClose }) {
               name="productName"
               autoComplete="Product Name"
               autoFocus
-            />
+              onChange={handleChange}
+              />
             <div className='row '>
-            <SizingDropdown></SizingDropdown>
-            <CategoryDropdown></CategoryDropdown>
+            <SizingDropdown onChangeValue={handleChange}></SizingDropdown>
+            <CategoryDropdown onChangeValue={handleChange}></CategoryDropdown>
 
             </div>
             <TextField
@@ -49,6 +75,7 @@ function AddProduct({ handleClose }) {
               label="Price"
               name="price"
               autoComplete="Price"
+              onChange={handleChange}
               autoFocus
             />
             <TextField
@@ -61,7 +88,9 @@ function AddProduct({ handleClose }) {
               name="stock"
               autoComplete="Stock"
               autoFocus
-            />
+              onChange={handleChange}
+           
+              />
             <TextField
               variant="outlined"
               margin="normal"
@@ -72,13 +101,15 @@ function AddProduct({ handleClose }) {
               name="description"
               autoComplete="Description"
               autoFocus
-            />
+              onChange={handleChange}
+            
+              />
             <Button
               type="submit"
               fullWidth
               variant="contained"
               color="primary"
-              onClick={() => {}}
+              onClick={() => saveProduct(product)}
             >
               Save
             </Button>

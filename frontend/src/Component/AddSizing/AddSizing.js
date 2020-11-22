@@ -1,17 +1,71 @@
-import React from 'react';
+import React, { useState, useEffect } from "react";
 import "../../Shared/Styles/popup.scss";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
+import { makeRequest } from "../../Service/requestCall";
+import Chip from '@material-ui/core/Chip';
 /**
- * Created by Piyush on Sat Nov 21 2020 15:43:00 GMT+0530 (India Standard Time)
- * popup for sizing
- * Updated by Piyush on Sat Nov 21 2020 15:43:00 GMT+0530 (India Standard Time)
- * popup for sizing
+ * Created by Piyush on Sat Nov 21 2020 15:42:34 GMT+0530 (India Standard Time)
+ * popup for size
+ * Updated by Piyush on Sat Nov 21 2020 15:42:34 GMT+0530 (India Standard Time)
+ * popup for size
  */
 
+function AddSizing({ handleClose }) {
+  const [data, setData] = useState([]);
+  const [sizeItem, setItem] = useState({size : ''});
+  useEffect(() => {
+    try {
+      async function getData(){
+        let response = await makeRequest({
+          method: "GET",
+          url: "/v1/getAllSizes",
+        });
+        if(response.data.code === 200){
+          setData(response.data.result);
+        }
+      }
+      getData();
+    } catch (error) {
 
-function AddSizing({handleClose}) {
+    }
+  }, []);
+  const saveSizing = (size) => {
+    try {
+      async function saveSizing(){
+        let response = await makeRequest({
+          method: "POST",
+          url: "/v1/addOrUpdateSizing",
+          data : size
+        });
+      }
+      saveSizing();
+    } catch (error) {
+
+    }
+  };
+  
+  const handleChange = (event) => {
+    setItem({size : event.target.value});
+  };
+  const handleDelete = (size) => {
+    try {
+      async function saveSizing(){
+        let response = await makeRequest({
+          method: "POST",
+          url: "/v1/deleteSizing",
+          data : size
+        });
+        if(response.data.code === 200){
+          setData((data) => data.filter((c) => c.sizeId !== size.sizeId))
+        }
+      }
+      saveSizing();
+    } catch (error) {
+
+    }
+  };
   return (
     <div className="popup-box">
       <div className="box">
@@ -22,16 +76,26 @@ function AddSizing({handleClose}) {
           <Typography component="h1" variant="h5">
             Add New Sizing
           </Typography>
+          {data.map((sizeItem) => {
+            return (
+              <Chip size={'small'} 
+              key={sizeItem.sizeId} 
+              className='width-content-fit' 
+              label={sizeItem.size} 
+              onDelete={() => handleDelete(sizeItem)} color="primary" />
+            );
+          })}
           <form noValidate>
             <TextField
               variant="outlined"
               margin="normal"
               required
               fullWidth
-              id="categoryName"
-              label="Category Name"
-              name="categoryName"
-              autoComplete="Category Name"
+              id="size"
+              label="Sizing Name"
+              name="size"
+              autoComplete="Sizing Name"
+              onChange={handleChange}
               autoFocus
             />
             <Button
@@ -39,7 +103,7 @@ function AddSizing({handleClose}) {
               fullWidth
               variant="contained"
               color="primary"
-              onClick={() => {}}
+              onClick={() => saveSizing(sizeItem)}
             >
               Save
             </Button>

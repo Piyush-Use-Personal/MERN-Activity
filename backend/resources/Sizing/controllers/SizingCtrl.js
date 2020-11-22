@@ -81,7 +81,7 @@ function SizingCtrl() {
     try {
       async.waterfall([
         function getAllSizes(callback) {
-            Sizing.find({isDeleted : false}, function (err, result) {
+            Sizing.find({isDeleted : false} ,{_id: 0, __v : 0, isDeleted: 0} , function (err, result) {
                 if(err){
                     callback(err);
                 } else if(result.length === 0){
